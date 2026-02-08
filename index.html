@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hani Terminal Portfolio</title>
+
+<link rel="icon" href="data:image/svg+xml,
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>
+  <text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='48'>🖥️</text>
+</svg>">
+
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+<link href="https://fonts.cdnfonts.com/css/ocr-a-std" rel="stylesheet">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+<style>
+  :root {
+    --fg: #00ff88;
+    --accent: #00ffaa;
+    --text-color: #ffffff;  
+  }
+
+  body {
+    background-color: #0d0d0d;
+    color: var(--fg);
+    font-family: 'Roboto Mono', monospace;
+    letter-spacing: 0.05em;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  #terminal {
+    padding: 20px;
+    height: calc(100vh - 40px);
+    overflow-y: auto;
+    white-space: pre-wrap;
+  }
+
+  .prompt {
+    color: var(--text-color);
+  }
+
+  input {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-family: inherit;
+    font-size: 1em;
+    width: 80%;
+    outline: none;
+  }
+
+  ::selection {
+    background: var(--fg);
+    color: #000;
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+
+  .banner {
+    color: var(--accent);
+    font-weight: bold;
+    margin-bottom: 1em;
+  }
+
+  .banner-ascii {
+    white-space: pre;
+    font-family: 'Roboto Mono', monospace;
+  }
+
+  .banner-ocr {
+    display: none;
+    font-family: 'OCR A Std', monospace;
+    font-size: 1.5em;
+    letter-spacing: 0.05em;
+    line-height: 1.3em;
+    white-space: normal;
+  }
+
+  .banner-ocr code {
+    font-size: 0.9em;
+  }
+
+  @media (max-width: 700px) {
+    .banner-ascii {
+      display: none;
+    }
+    .banner-ocr {
+      display: block;
+    }
+
+    /* Scale terminal and text down for small screens */
+    body {
+      font-size: 0.85em;
+    }
+
+    #terminal {
+      transform: scale(0.9);
+      transform-origin: top left;
+      padding: 15px;
+    }
+
+    input {
+      font-size: 0.9em;
+    }
+
+    .banner-ocr {
+      font-size: 1.6em;
+      margin-bottom: 0.5em;
+    }
+
+    .banner-ocr code {
+      font-size: 0.9em;
+    }
+  }
+
+  .typed-line {
+    display: block;
+    white-space: pre-wrap;
+  }
+
+  i {
+    color: var(--accent);
+    margin-right: 6px;
+  }
+  .banner-ocr .banner-subtext {
+    display: inline-block;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.7em;
+    letter-spacing: 0;
+    color: var(--fg);
+  }
+
+</style>
+</head>
+<body>
+<div id="terminal">
+  <div class="banner banner-ascii" id="banner-ascii">
+  
+  __  __   __    __   __    __   ______        __   __   ______   __   __   __
+ /\ \ \ \ /\ "-./  \ /\ "-./  \ /\  ___\      /\ \__\ \ /\  __ \ /\ "-.\ \ /\ \
+ \ \ \_\ \\ \ \-./\ \\ \ \-./\ \\ \  __\      \ \  __  \\ \  __ \\ \ \-.  \\ \ \
+  \ \_____\\ \_\   \ \\ \ \ \ \ \\ \_____\     \ \_\ \__\\ \_\ \_\\ \_\\"\_\\ \_\
+   \/_____/ \/_/   /_/ \/_/  \/_/ \/_____/      \/_/ /__/ \/_/\/_/ \/_/ \/_/ \/_/
+                                                                           
+    Welcome to my terminal portfolio!
+    Type 'help' to begin.
+  </div>
+
+  <div class="banner banner-ocr" id="banner-ocr">
+    UMME<br>TERMINAL<br>PORTFOLIO<br>
+    <span class="banner-subtext">Type <code>help</code> to begin.</span>
+  </div>
+
+
+  <div><span class="prompt">&gt;</span> <input id="commandInput" autofocus autocomplete="off" spellcheck="false" /></div>
+</div>
+
+<script>
+const terminal = document.getElementById('terminal');
+const input = document.getElementById('commandInput');
+
+const bannerAsciiHTML = document.getElementById('banner-ascii').innerHTML;
+const bannerOcrHTML = document.getElementById('banner-ocr').innerHTML;
+
+const commands = {
+  help: `Available commands:
+  <i class="fa-solid fa-user fa-fw"></i> about        - Who I am
+  <i class="fa-solid fa-lightbulb fa-fw"></i> skills       - My core skills
+  <i class="fa-solid fa-folder-open fa-fw"></i> projects     - Some of my projects
+  <i class="fa-solid fa-certificate fa-fw"></i> Certifi      - My certifications & Learning
+  <i class="fa-solid fa-envelope fa-fw"></i> contact      - How to reach me
+  <i class="fa-solid fa-broom fa-fw"></i> clear        - Clear the terminal`,
+
+  about: `I’m Umme Hani. I automate things so humans don’t have to suffer.
+I don’t just use tools — I debug why systems fail, fix the issue, and automate the fix so it doesn’t happen again.
+Currently open to entry-level DevOps roles where I can learn fast and take ownership of real production systems.`,
+
+  skills: `Core skills:
+  <i class="fa-solid fa-code fa-fw"></i> Python, Java, Basic Bash scripting
+  <i class="fa-brands fa-linux fa-fw"></i> Linux
+  <i class="fa-brands fa-git-alt fa-fw"></i> Version Control: Git, GitHub
+  <i class="fa-solid fa-infinity fa-fw"></i> CI/CD, GitHub Action
+  <i class="fa-brands fa-docker fa-fw"></i> Docker & Containers
+  <i class="fa-solid fa-dharmachakra fa-fw"></i> Kubernetes
+  <i class="fa-solid fa-cloud fa-fw"></i> Cloud: AWS(EC2, S3, IAM)
+  <i class="fa-solid fa-gears fa-fw"></i> Automation & Scripting
+  <i class="fa-solid fa-network-wired fa-fw"></i> Networking Fundamental
+  <i class="fa-solid fa-database fa-fw"></i> Database: MySQL, Postgres
+  <i class="fa-solid fa-gears fa-fw"></i> DevOps
+  <i class="fa-solid fa-people-roof fa-fw"></i> Agile`,
+
+  certifi : `Certification & Learnings:
+ <i class="fa-solid fa-graduation-cap fa-fw"></i> Completed "IBM DevOps and Software Engineering Professional certification" Course under Coursera
+ <i class="fa-solid fa-certificate fa-fw"></i> IBM - Microservices & Serverless Development  - <a href="https://drive.google.com/file/d/1B17hC6J7_Sr3rCqbDlSO_W7J2Kmh5Ki0/view?usp=sharing">View</a>
+ <i class="fa-solid fa-building fa-fw"></i> IBM - Application Security for Dev & DevOps - <a href="https://drive.google.com/file/d/1KfGyf6y2GTVolK5NbrpUbFL5YHCuQOMP/view?usp=sharing">View</a>
+ <i class="fa-solid fa-cloud fa-fw"></i> AWS - Cloud Practitioner Essentials - <a href="https://drive.google.com/file/d/1J2Tp9_G6iKGzf4m_oSpmgc4ePxX_3UdZ/view?usp=drive_link">View</a>
+ <i class="fa-solid fa-cloud fa-fw"></i> AWS – Getting Started with DevOps on AWS  - <a href="https://drive.google.com/file/d/1QxtLkxV-6Hef6KWGvi4f33cufE34EPPy/view?usp=drive_link">View</a>`,
+
+  projects: `Highlighted projects:
+  1. <a href="https://github.com/Ummehani18/multi-container-application">Multi Container Application </a> - Docker, AWS, CI/CD
+  2. <a href="https://github.com/Ummehani18/devops-capstone-project">Customer Accounts Microservice</a> - Flask,  Docker, GitHub Actions (CI/CD)
+  3. Personal terminal portfolio site (this one!)  
+  4. <a href="https://github.com/Ummehani18/rental-marketplace">Rental Marketplace Web App -Full Stack</a> -React, Spring Boot, MySQL
+  5. <a href="https://github.com/Ummehani18/Real-time-language-translator">Real-Time Language Translator </a> – Python, Flask, Speech Recognition, TTS `, 
+
+  contact: `You can reach me at:
+  <i class="fa-solid fa-envelope fa-fw"></i> <a href="mailto:umehani01072002@gmail.com">ummehani01072002@gmail.com</a>
+  <i class="fa-solid fa-globe fa-fw"></i> <a href="https://medium.com/@uh01072002" target="_blank">techBlog.com</a>
+  <i class="fa-brands fa-linkedin fa-fw"></i> <a href="https://www.linkedin.com/in/umme-hani-7aa049231/" target="_blank">linkedin.com/in/umme-hani-7aa049231</a>
+  <i class="fa-brands fa-github fa-fw"></i> <a href="https://github.com/Ummehani18" target="_blank">github.com/Ummehani18</a>`,
+
+  clear: 'CLEAR'
+};
+
+let history = [];
+let historyIndex = -1;
+let isTyping = false;
+
+function printOutput(cmd, output) {
+  const newLine = document.createElement('div');
+  newLine.innerHTML = `<span class="prompt">&gt;</span> ${cmd}`;
+  terminal.insertBefore(newLine, input.parentElement);
+
+  if (output === 'CLEAR') {
+    terminal.innerHTML = '';
+
+    const bannerAscii = document.createElement('div');
+    bannerAscii.className = 'banner banner-ascii';
+    bannerAscii.innerHTML = bannerAsciiHTML;
+
+    const bannerOcr = document.createElement('div');
+    bannerOcr.className = 'banner banner-ocr';
+    bannerOcr.innerHTML = bannerOcrHTML;
+
+    terminal.appendChild(bannerAscii);
+    terminal.appendChild(bannerOcr);
+    terminal.appendChild(input.parentElement);
+    return;
+  }
+
+  const outLine = document.createElement('div');
+  outLine.classList.add('typed-line');
+  terminal.insertBefore(outLine, input.parentElement);
+
+  if (output) typeLine(outLine, output);
+  else typeLine(outLine, `Command not found: ${cmd}`);
+
+  terminal.scrollTop = terminal.scrollHeight;
+}
+
+function typeLine(element, text, speed = 10) {
+  isTyping = true;
+  if (/<\/?[a-z][\s\S]*>/i.test(text)) {
+    element.innerHTML = text;
+    isTyping = false;
+    terminal.scrollTop = terminal.scrollHeight;
+    return;
+  }
+  let i = 0;
+  (function type() {
+    if (i < text.length) {
+      element.textContent += text.charAt(i++);
+      terminal.scrollTop = terminal.scrollHeight;
+      setTimeout(type, speed);
+    } else {
+      isTyping = false;
+    }
+  })();
+}
+
+input.addEventListener('keydown', e => {
+  if (isTyping) return;
+
+  if (e.key === 'Enter') {
+    const cmd = input.value.trim();
+    if (cmd) {
+      history.push(cmd);
+      historyIndex = history.length;
+      printOutput(cmd, commands[cmd]);
+    }
+    input.value = '';
+  }
+
+  if (e.key === 'ArrowUp') {
+    if (historyIndex > 0) input.value = history[--historyIndex];
+    e.preventDefault();
+  }
+
+  if (e.key === 'ArrowDown') {
+    if (historyIndex < history.length - 1) input.value = history[++historyIndex];
+    else input.value = '';
+    e.preventDefault();
+  }
+
+  if (e.key === 'Tab') {
+    e.preventDefault();
+    const current = input.value.trim();
+    if (!current) return;
+    const matches = Object.keys(commands).filter(c => c.startsWith(current));
+    if (matches.length === 1) input.value = matches[0];
+    else if (matches.length > 1)
+      printOutput(current, `Possible commands:\n  ${matches.join('\n  ')}`);
+  }
+});
+</script>
+</body>
+</html>
